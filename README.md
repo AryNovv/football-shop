@@ -80,12 +80,12 @@ urlpatterns = [
                                                                                                                 Browser (client)
                                                                                                                 	||  (HTTP REQUEST)
                                                                                                                 	v
-                                                                                                                server
-                                                                                                                  ||
-                                                                                                                  v
-                                                                                                                Django
-                                                                                                                  ||
-                                                                                                                  v
+                                                                                                                 server
+                                                                                                                    ||
+                                                                                                                    v
+                                                                                                                 Django
+                                                                                                                    ||
+                                                                                                                    v
                                                                                                                 urls.py
                                                                                            (Mencocokkan URL yang diminta dengan pola yang tersedia)
                                                                                                                 	||
@@ -106,12 +106,12 @@ urlpatterns = [
                                                                                               (Menampilkan data dalam bentuk halaman web)
                                                                                                                 	|| (HTTP RESPONSE)
                                                                                                                 	v
-                                                                                                                Django
-                                                                                                                  ||
-                                                                                                                  v
-                                                                                                                server
-                                                                                                                  ||
-                                                                                                                  v
+                                                                                                                  Django
+                                                                                                                    ||
+                                                                                                                     v 
+                                                                                                                  server
+                                                                                                                    ||
+                                                                                                                     v
                                                                                                                 Browser (Client)
 ```
 
