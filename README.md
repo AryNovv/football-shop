@@ -1,4 +1,5 @@
-# Jelaskan bagaimana cara mengimplementasikan checklist di atas secara step-by-step.
+# Tugas 2
+### Jelaskan bagaimana cara mengimplementasikan checklist di atas secara step-by-step.
 ### Membuat Projek Django Baru
 - menginstall dependencies yang tercantum pada tutorial 0 dan membuat proyek bernama sepakbola_shop dengan menjalankan perintah `django-admin startproject football_shop .`
 - Membuat dan mengkonfigurasi env dengan perintah ` python -m venv env`.
