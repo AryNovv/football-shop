@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db import Model
 
 # Create your views here.
 def show_main(request):
@@ -9,3 +10,5 @@ def show_main(request):
     }
 
     return render(request, "main.html", context)
+
+

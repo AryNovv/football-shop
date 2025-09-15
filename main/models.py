@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-class News(models.Model):
+class Produk(models.Model):
     CATEGORY_CHOICES = [
         ('boots', 'Boots'),
         ('knee-guards', 'Knee-guards'),
@@ -20,7 +20,7 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_featured = models.BooleanField(default=False)
     
-    def __str__(self):
-        return self.title
     
-  
+    def __str__(self):
+        return self.name
+    
