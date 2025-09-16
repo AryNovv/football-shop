@@ -1,5 +1,5 @@
 # Tugas 2
-### Jelaskan bagaimana cara mengimplementasikan checklist di atas secara step-by-step.
+## Jelaskan bagaimana cara mengimplementasikan checklist di atas secara step-by-step.
 ### Membuat Projek Django Baru
 - menginstall dependencies yang tercantum pada tutorial 0 dan membuat proyek bernama sepakbola_shop dengan menjalankan perintah `django-admin startproject football_shop .`
 - Membuat dan mengkonfigurasi env dengan perintah ` python -m venv env`.
@@ -75,7 +75,7 @@ urlpatterns = [
 - lakukan git remote dengan server pws, lalu jalankan `git push pws master`.
 
 
-#Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html
+## Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html
 ```
 
                                                                                                                 Browser (client)
@@ -116,7 +116,7 @@ urlpatterns = [
                                                                                                                 Browser (Client)
 ```
 
-#Jelaskan peran settings.py dalam proyek Django
+## Jelaskan peran settings.py dalam proyek Django
 ```
 Dalam sebuah proyek djang, settings.py sangat penting karena file itu berfungsi sebagai pusat konfigurasi dari proyek Django tersebut. disitulah dimana semua setting utama proyek django didefinisikan, Setting setting seperti:
 - Konfigurasi database 
@@ -126,7 +126,7 @@ Dalam sebuah proyek djang, settings.py sangat penting karena file itu berfungsi 
 dan setting lainnya yang membuat settings.py inti pengaturan proyek Django.
 ```
 
-#Bagaimana cara kerja migrasi database di Django?
+## Bagaimana cara kerja migrasi database di Django?
 ```
 Migrasi model/database adalah cara django keeping-track perubahan yang dilakukan pada database dengan cara menyinkronkan perubahan model dengan struktur tabel di database. Cara kerja Migrasi database Django 
 
@@ -142,17 +142,38 @@ Django menjalankan file migrasi tersebut ke database sehingga tabel, kolom, atau
 4)Pencatatan Migrasi
 Django menyimpan history migrasi yang sudah diterapkan di tabel khusus (django_migrations)dimana bisa dilihat migrasi yang sudah diterapkan dan yang belum.
 ```
-#Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
+## Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
 ```
 Menurut saya, framework Django merupakan tempat yang ideal untuk belajar pengembangan software karena Django mempunyai fitur
 bawaan lengkap yang membuat implementasi mudah untuk pemula, ditambahkan django memiliki struktur yang jelas (MVT) dan sintaks python yang mudah,
 semua ini membuat Django framework ideal untuk pemula.
 ```
 
-#Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya?
+## Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya?
 ```
 Asdos sudah sangat membantu dan standby untuk menjawab pertanyaan=pertanyaan saat sesi tutorial
 ```
+
+#Tugas 3
+## Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
+```
+- Agar data dapat diakses oleh berbagai client di berbagai tempat , 
+  sehingga memungkinkan data tersebut bisa dikirim dari client ke server atau sebaliknya (Client -> Server or Server -> Client), 
+  lalu disimpan ke dalam database. 
+- sebagai "jembatan" pada komponen-komponen pada sebuah platform (database SQL,NoSQL, API REST, etc) supaya sistem-sistem ini bisa berkomunikasi
+- menghasilkan user experience yang lebih baik karena memastikan data dapat di akses secara cepat dan tepat waktu.
+```
+
+## Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+```
+Saya Sendiri lebih memilihi JSON karena
+- JSON memiliki Sytax dan Format mirip JavaScript yang membuatnya lebih mudah di baca
+- JSON lebih ringan dan efisien
+- Didukung luas di berbagai APi pada web
+
+```
+
+
 
 
 
