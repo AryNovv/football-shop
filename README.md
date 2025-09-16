@@ -75,7 +75,7 @@ urlpatterns = [
 - lakukan git remote dengan server pws, lalu jalankan `git push pws master`.
 
 
-## Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html
+## Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara `urls.py`, `views.py`, `models.py`, dan berkas html
 ```
 
                                                                                                                 Browser (client)
@@ -116,7 +116,7 @@ urlpatterns = [
                                                                                                                 Browser (Client)
 ```
 
-## Jelaskan peran settings.py dalam proyek Django
+## Jelaskan peran `settings.py` dalam proyek Django
 ```
 Dalam sebuah proyek djang, settings.py sangat penting karena file itu berfungsi sebagai pusat konfigurasi dari proyek Django tersebut. disitulah dimana semua setting utama proyek django didefinisikan, Setting setting seperti:
 - Konfigurasi database 
@@ -171,9 +171,20 @@ maka ketika user menginput form tersebut dan masuk ke database, maka ketika data
 ## Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
 - CSRF(Cross-Site Request Forgery) adalah jenis serangan web/CyberSecurity flaw dimana penyerang mengirim request ke server saat loading sebuah form (ex : login bank) 
 sehingga penyerang dapat mengirim request selagi meyamar sebagai client. penyerang dapat menyamar sebagai client karena meng-intersepsi session cookie yang telah di kirim oleh server ke client
-- csrf_token dibuat untuk menanggulangi csrf, dengan cara server mengirim semacam kode kepada client, dan ketika melakukan request, client harus mengembalikkan kode tersebut ke server, 
+- `csrf_token` dibuat untuk menanggulangi csrf, dengan cara server mengirim semacam kode kepada client, dan ketika melakukan request, client harus mengembalikkan kode tersebut ke server, 
 jika tidak menggunakan csrf_token, maka penyerang dapat melakukan request kepada server tanpa verifikasi dengan form tersebut.
 
 
+## Screenshot 4 URL di Postman
+- XML:  
+![showxml](https://drive.google.com/uc?export=view&id=1DxTfioyXXgnpunl6mPvSomIlQ7Llcaai))
 
+- JSON:  
+![showjson](https://drive.google.com/uc?export=view&id=1ljKUa1BnFqqUTBCpuNcZEBL6dKd4YA3i)
+
+- XMLByID:  
+![showxmlById](https://drive.google.com/uc?export=view&id=1O3LCve4znddoCEvYG96x5ZYVXiP2mJbV)
+
+- JSONByID:  
+![showjsonById](https://drive.google.com/uc?export=view&id=178RQZIOIsjRjLPC6lmsl4lx21JZaWK0I)
 
