@@ -127,7 +127,6 @@ dan setting lainnya yang membuat settings.py inti pengaturan proyek Django.
 ```
 
 ## Bagaimana cara kerja migrasi database di Django?
-```
 Migrasi model/database adalah cara django keeping-track perubahan yang dilakukan pada database dengan cara menyinkronkan perubahan model dengan struktur tabel di database. Cara kerja Migrasi database Django 
 
 1)Definisi Model
@@ -136,48 +135,44 @@ membuat atau mengubah model di models.py.
 2)Membuat Migrasi (python manage.py makemigrations)
 Django membaca perubahan pada model dan menghasilkan file migrasi (berisi instruksi SQL yang akan dijalankan).
 
-3) Menerapkan Migrasi (python manage.py migrate)
+3)Menerapkan Migrasi (python manage.py migrate)
 Django menjalankan file migrasi tersebut ke database sehingga tabel, kolom, atau relasi sesuai dengan model.
 
 4)Pencatatan Migrasi
 Django menyimpan history migrasi yang sudah diterapkan di tabel khusus (django_migrations)dimana bisa dilihat migrasi yang sudah diterapkan dan yang belum.
-```
+
 ## Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
-```
 Menurut saya, framework Django merupakan tempat yang ideal untuk belajar pengembangan software karena Django mempunyai fitur
 bawaan lengkap yang membuat implementasi mudah untuk pemula, ditambahkan django memiliki struktur yang jelas (MVT) dan sintaks python yang mudah,
 semua ini membuat Django framework ideal untuk pemula.
-```
 
 ## Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya?
-```
 Asdos sudah sangat membantu dan standby untuk menjawab pertanyaan=pertanyaan saat sesi tutorial
-```
 
-#Tugas 3
+# Tugas 3
 ## Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
-```
 - Agar data dapat diakses oleh berbagai client di berbagai tempat , 
   sehingga memungkinkan data tersebut bisa dikirim dari client ke server atau sebaliknya (Client -> Server or Server -> Client), 
   lalu disimpan ke dalam database. 
 - sebagai "jembatan" pada komponen-komponen pada sebuah platform (database SQL,NoSQL, API REST, etc)
   supaya sistem-sistem ini bisa berkomunikasi
 - menghasilkan user experience yang lebih baik karena memastikan data dapat di akses secara cepat dan tepat waktu.
-```
 
 ## Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
-```
 Saya Sendiri lebih memilihi JSON karena
 - JSON memiliki Sytax dan Format mirip JavaScript yang membuatnya lebih mudah di baca
 - JSON lebih ringan dan efisien
 - Didukung luas di berbagai APi pada web
-```
 
 ## Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?
-```
+`is_valid()` berguna untuk memvalidasi input dari form sudah sesuai dengan aturan field di models.py atau aturan django tentang isi form tersebut.Jika `is_valid()` tidak digunakan, 
+maka ketika user menginput form tersebut dan masuk ke database, maka ketika database ingin menggunakan data tersebut ada kemungkinan menyebabkan crash karena tidak sesuai dengan aturan field di models.py atau django
 
-```
-
+## Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+- CSRF(Cross-Site Request Forgery) adalah jenis serangan web/CyberSecurity flaw dimana penyerang mengirim request ke server saat loading sebuah form (ex : login bank) 
+sehingga penyerang dapat mengirim request selagi meyamar sebagai client. penyerang dapat menyamar sebagai client karena meng-intersepsi session cookie yang telah di kirim oleh server ke client
+- csrf_token dibuat untuk menanggulangi csrf, dengan cara server mengirim semacam kode kepada client, dan ketika melakukan request, client harus mengembalikkan kode tersebut ke server, 
+jika tidak menggunakan csrf_token, maka penyerang dapat melakukan request kepada server tanpa verifikasi dengan form tersebut.
 
 
 
