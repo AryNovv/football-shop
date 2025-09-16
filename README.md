@@ -174,6 +174,144 @@ sehingga penyerang dapat mengirim request selagi meyamar sebagai client. penyera
 - `csrf_token` dibuat untuk menanggulangi csrf, dengan cara server mengirim semacam kode kepada client, dan ketika melakukan request, client harus mengembalikkan kode tersebut ke server, 
 jika tidak menggunakan csrf_token, maka penyerang dapat melakukan request kepada server tanpa verifikasi dengan form tersebut.
 
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+### Tambahkan 4 fungsi views baru untuk melihat objek yang sudah ditambahkan dalam format XML, JSON, XML by ID objek, dan JSON by ID objek.
+- untuk menunjukkan objek dalam fungsi XML, saya memakai fungsi:
+```
+def show_xml(request):
+     products_list = Product.objects.all()
+     xml_data = serializers.serialize("xml", products_list)
+     return HttpResponse(xml_data, content_type="application/xml")
+
+def show_json(request):
+    product_list = Produk.objects.all()
+    json_data = serializers.serialize("json", product_list)
+    return HttpResponse(json_data, content_type="application/json")
+
+```
+- disini fungsi mengambil semua object, lalu dengan menggunakan library serializer, library tersebut mengubah semua format object menjadi xml/json. lalu fungsi mengembalikan response berupa page dengan semua xml/json.
+
+```
+def show_xml_by_id(request, product_id):
+   try:
+       product_item = Product.objects.filter(pk=product_id)
+       xml_data = serializers.serialize("xml", product_item)
+       return HttpResponse(xml_data, content_type="application/xml")
+   except Product.DoesNotExist:
+       return HttpResponse(status=404)
+
+def show_json_by_id(request, product_id):
+    try:
+        product_item  = Produk.objects.get(pk=product_id)
+        json_data = serializers.serialize("json", [product_item])
+        return HttpResponse(json_data, content_type="application/json")
+    except:
+        return HttpResponse(status=404)
+```
+- disini fungsi mengambil object dengan id yang sama dengan request . Lalu diserialize ke xml/json, setelah itu mengembalikan respons page berupa xml/json dengan id yang sama. Jika object dengan id request tidak ada, mengembalikan response page 404.
+
+### Membuat routing URL untuk masing-masing fungsi views yang telah ditambahkan.
+- import fungsi yang di tambahkan di `views.py` ke `urls.py`
+- tambahkan path file xml/json masing-masing fungsi ke dalam `urlpatterns:`
+```
+        .
+        .
+        .
+    path('xml/', show_xml, name='show_xml'),
+    path('json/', show_json, name='show_json'),
+    path('xml/<str:product_id>/', show_xml_by_id, name='show_xml_by_id'),
+    path('json/<str:product_id>/', show_json_by_id, name='show_json_by_id'),
+        .
+        .
+```
+
+###  Membuat halaman yang menampilkan data objek model yang memiliki tombol "Add" yang akan redirect ke halaman form, serta tombol "Detail" pada setiap data objek model yang akan menampilkan halaman detail objek.
+- di main.html,  buat 2 button dengan tag button yang memiliki anchor (href) ke create_listing.html untuk menambahkan objek dan tag button lagi yang href ke product_detail untuk lihat detail objek
+- jika sudah ada objek, menampilkan data objek dengan for-loop semua objek produk yang ada di database dan ambil semua field objeknya.
+```
+<a href="{% url 'main:create_listing' %}">
+  <button>+ Add Listing</button>
+</a>
+
+<hr>
+
+{% if not product_list %}
+<p>Uh Oh! we have no listing at the moment, come back next time when a new drop has been announced!</p>
+{% else %}
+
+{% for produk in product_list %}
+<div>
+  <h2><a href="{% url 'main:show_catalog' produk.id %}">
+    {{ produk.name }} ${{produk.price }}
+    </a>
+  </h2>
+
+  <p><b>{{ produk.get_category_display }}</b>
+    {% if produk.is_featured %} | <b>Featured</b>{% endif %}
+    {% if produk.is_product_hot %} | <b>Hot</b>{% endif %}
+    | <i>{{ produk.created_at|date:"d M Y H:i" }}</i>
+    | Views: {{ produk.products_views }}
+  </p>
+
+  {% if produk.thumbnail %}
+  <img src="{{ produk.thumbnail }}" alt="thumbnail" width="150" height="100">
+  <br />
+  {% endif %}
+
+  <p>{{ produk.description|truncatewords:25 }}...</p>
+
+  <p><a href="{% url 'main:show_catalog' produk.id %}"><button>Details</button></a></p>
+</div>
+
+<hr>
+```
+
+###  Membuat halaman form untuk menambahkan objek model.
+- buat forms.py yang berisi field pada model apa saja yang ingin diisi.
+```
+from django.forms import ModelForm
+from main.models import Produk
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Produk
+        fields = ["price", "name", "description", "category", "thumbnail","is_featured"]
+```
+- Lalu buat fungsi pada views.py yang bernama create_listing yang mengimport `forms.py` lalu diroute ke /create-listing di `urls.py`
+```
+def create_listing(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_main')
+
+    context = {'form': form}
+```
+```
+path('create-listing/', create_listing, name='create_listing'),
+```
+- halaman form saya buat pada `create_listing` yang inti isinya adalah form dari forms.py, dan ada `csrf_token` untuk mencegah CSRF attack. terakhir, ada tombol submit yang akan mengirim data form ke database lewat `views.py` lalu redirect ke `main.html`.
+
+### Membuat halaman yang menampilkan detail dari setiap data objek model.
+- buat dulu fungsi yang bernama show_catalog. Fungsi ini bisa mengambil objek dan routing ke `product_detail.html` di `views.py`. Lalu routing fungsi tersebut di `urls.py`.
+```
+def show_catalog(request, id):
+    products = get_object_or_404(Produk, pk=id)
+    products.increment_views()
+
+    context = {
+        'products': products
+    }
+
+    return render(request, "product_detail.html", context)
+```
+```
+path('catalog/<str:id>/', show_catalog, name='show_catalog'),
+```
+- Lalu pada `product_detail.html`, tambahkan header untuk semua field yang ada di objek tersebut. 
+- Ditambahkan  button untuk kembali ke halaman utama dengan href `main.html`.
+
 
 ## Screenshot 4 URL di Postman
 - XML:  
