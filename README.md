@@ -160,7 +160,8 @@ Asdos sudah sangat membantu dan standby untuk menjawab pertanyaan=pertanyaan saa
 - Agar data dapat diakses oleh berbagai client di berbagai tempat , 
   sehingga memungkinkan data tersebut bisa dikirim dari client ke server atau sebaliknya (Client -> Server or Server -> Client), 
   lalu disimpan ke dalam database. 
-- sebagai "jembatan" pada komponen-komponen pada sebuah platform (database SQL,NoSQL, API REST, etc) supaya sistem-sistem ini bisa berkomunikasi
+- sebagai "jembatan" pada komponen-komponen pada sebuah platform (database SQL,NoSQL, API REST, etc)
+  supaya sistem-sistem ini bisa berkomunikasi
 - menghasilkan user experience yang lebih baik karena memastikan data dapat di akses secara cepat dan tepat waktu.
 ```
 
@@ -170,9 +171,12 @@ Saya Sendiri lebih memilihi JSON karena
 - JSON memiliki Sytax dan Format mirip JavaScript yang membuatnya lebih mudah di baca
 - JSON lebih ringan dan efisien
 - Didukung luas di berbagai APi pada web
-
 ```
 
+## Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?
+```
+
+```
 
 
 
