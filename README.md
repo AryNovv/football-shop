@@ -344,4 +344,22 @@ Kekurangan:
 - otorisasi di django dilakukan dengan fungsi-fungsi yang melihat apakah suatu user memiliki izin untuk suatu fungsi, seperti user.has.perm(). 
 - ada jugadecorators seperti @login_required, yang hanya mengizinkan user yang sudah tersimpan untuk mengakses suatu fungsi.
 
+## Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
+Session dan cookies berguna agar user tidak perlu login berkali-kali jika semisal user berpindah dari satu web ke lainnya.
+Cookies:
+- lebih mudah digunakan
+- tidak aman
+- ukuran terbatas
+- jika data dicuri oleh penyerang, yang membuat penyerang tersebut bisa memiliki terhadap akun jika cookie tidak direset
+Session:
+- session lebih aman karena disimpan di server
+- Session  hanya bertahan sampai user logout
+- penyerang bisa mengambil akses session yang sedang berlangsung
+
+##  Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+- Cookies tidak selalu aman, karena sifat cookies yang disimpan secara lokal (pada sistem client/user), jadi jika developer menyimpan username atau password ataupun informasi penting lainnya, informasi tersebut bisa diambil melalui malware cookie stealer, XSS, dan CSRF. 
+- Django membuat server-side session (Session ID). Sekarang informasi penting disimpan pada server dan cookie hanya menyimpan SessionID. Jadi semisal cookie yang ada di client dicuri, cookie tersebut hanya valid sampe session itu berakhir saja.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+
 
