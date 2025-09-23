@@ -326,3 +326,22 @@ path('catalog/<str:id>/', show_catalog, name='show_catalog'),
 - JSONByID:  
 ![showjsonById](https://drive.google.com/uc?export=view&id=178RQZIOIsjRjLPC6lmsl4lx21JZaWK0I)
 
+# Tugas 4
+## Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.
+- Django AuthencticationForm merupakan fungsi bawaan django yang digunakan dalam proses "login" oleh user, dilakukan dalam bentuk form berisi field username dan password. 
+  Setelah selesai, fungsi tersebut akan mengembalikan objek "user" yang merupakan akun unik user. 
+Kelebihan:
+- Developer tidak perlu membuat form login baru, mudah dipakai, serta langsung terintegrasi dengan sistem django.
+-
+Kekurangan:
+- Sangat sederhana dalam segi UI/UX. Hanya memperlihatkan field username dan password yang harus diisi yang terkesan cukup "barebones".
+-
+
+## Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?
+- Autentikasi = proses memverifikasi identitas suatu user/client.
+- otorisasi = proses menentukan hak akses terhadap sesuatu user/client yang di ketahui.
+- Django mengimplementasikan autentikasi dengan fungsi2 bawaan pada library `django.contrib.auth` yang berisi hal-hal seperti login, logout, dan authenticate.
+- otorisasi di django dilakukan dengan fungsi-fungsi yang melihat apakah suatu user memiliki izin untuk suatu fungsi, seperti user.has.perm(). 
+- ada jugadecorators seperti @login_required, yang hanya mengizinkan user yang sudah tersimpan untuk mengakses suatu fungsi.
+
+
