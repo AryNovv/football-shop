@@ -361,5 +361,98 @@ Session:
 - Django membuat server-side session (Session ID). Sekarang informasi penting disimpan pada server dan cookie hanya menyimpan SessionID. Jadi semisal cookie yang ada di client dicuri, cookie tersebut hanya valid sampe session itu berakhir saja.
 
 ## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+###  Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna mengakses aplikasi sebelumnya sesuai dengan status login/logoutnya.
+- import libary-libary y `django.contrib.auth` yang berisi fungsi-fungsi login, serta decoratornya. 
+- Lalu buat fungsi register: 
+```
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+```
+- Fungsi ini akan membuat form register menggunakan `UserCreationForm` yang merupakan form bawaan django untuk penambahan use yang memiliki field Username dan Password. Fungsi ini akan dipanggil melalui /register.html
+`register.html`  routing pada urls.py yang mengarah ke register.html. Html tersebut hanya berfungsi untuk menampilkan `UserCreationForm` dengan method `POST`.
+
+- Lalu buat fungsi login :
+```
+def login_user(request):
+   if request.method == 'POST':
+      form = AuthenticationForm(data=request.POST)
+
+      if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+
+   else:
+      form = AuthenticationForm(request)
+   context = {'form': form}
+   return render(request, 'login.html', context)
+```
+- Fungsi dipanggil melalui /login, jadi buat dulu routingnya . Fungsi ini membuat form login dari `AuthenticationForm`, lalu fungsi akan mengambil user dan diteruskan ke fungsi login django `login(request, user)`. Setelah itu user bisa masuk ke website.
+- Lalu buat page login dengan membuat login.html. Disini user bisa login dengan memasukkan kredensialnya, atau tersedia button yang memanggil page register. 
+-  tambahkan decorator `@login_required(login_url='/login')` pada fungsi `show_main` dan `show_product` agar hanya user terdaftar yang bisa mengakses 2 fungsi tersebut, jika user belum terdaftar atau belum login, redirect ke page login.
+  
+- Lalu buat fungsi logout:
+```
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+```
+- Fungsi ini dipanggil melalui /logout, jadi tambahkan routing pada `urls.py` . Fungsi digunakan jika user ingin logout dengan cara memanggil logout(request) yang menghapus data session di server, lalu redirect ke halaman login. 
+- Fungsi dapat dipanggil lewat main.html. Jadi saat user ingin logout, tekan button yang ada di page main.
+- kode buttonnya seperti ini:
+```
+<a href="{% url 'main:logout' %}">
+  <button>Logout</button>
+</a>
+```
+
+###  Membuat dua (2) akun pengguna dengan masing-masing tiga (3) dummy data menggunakan model yang telah dibuat sebelumnya untuk setiap akun di lokal.
+- Buat akun baru, lalu tambahkan product dengan isi field-field yang tersedia, repeat 3x.
+
+###  Menghubungkan model Product dengan User.
+- buat field user pada models. Lalu tambahkan bagian kode pada `views.py`, spesifiknya pada create_product:
+```        
+        product_entry = form.save(commit = False)
+        product_entry.user = request.user
+        product_entry.save()
+```
+- Di bagian ini, field user akan diisi dengan user yang sedang terlogin pada saat ini, jadi membuat hubungan "one-to-many" antara user dengan product.
+
+###  Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last_login pada halaman utama aplikasi.
+- Pada main.html, ditambahkan:
+```
+<h5>Logged in as: {{ logged }}</h5>
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+<hr>
+```
+- Potongan kode ini akan mengambil pengguna yang sedang logged dan waktu last_login user tersebut yang diambil dari context showmain pada `views.py` yang berisi seperti ini:
+```
+    context = {
+        'npm' : '2406495590',
+        'name': 'Arya Novalino Pratama',
+        'class': 'PBP B'
+        'logged': request.user.username,,
+        'Aplikasi' : 'FootballShop',
+        'product_list': product_list,
+        'last_login': request.COOKIES.get('last_login', 'Never')
+    }
+```
+- Pada potongan kode tersebut, variabel logged diambil dari user yang sedang terlogin pada saat itu dan diambil usernamenya.
+- Sedangkan last_login adalah variabel yang mengambil waktu last_login dari cookies, ketika variabel tersebut ada isinya, maka ambil isi tersebut. Jika tidak ada isi, maka tampilkan 'Never"
+
 
 
