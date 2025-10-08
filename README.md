@@ -454,5 +454,120 @@ def logout_user(request):
 - Pada potongan kode tersebut, variabel logged diambil dari user yang sedang terlogin pada saat itu dan diambil usernamenya.
 - Sedangkan last_login adalah variabel yang mengambil waktu last_login dari cookies, ketika variabel tersebut ada isinya, maka ambil isi tersebut. Jika tidak ada isi, maka tampilkan 'Never"
 
+# TUGAS 5
+## Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+- CSS selector terdapat hierarki pengambilan, bentuknya:
+- 1. Kode inline style (cth :<p style="color: red;">Teks ini berwarna merah</p>)
+- 2. ID Selector (cth : #title)
+- 3. Class, pseudo-class, dan attribute (cth : .class, :hover, [type="text"])
+- 4. Tag/Type selector (p, h1, div) dan Universal selector (*)
+- Ketika ada 2 selector dengan tingkat hierarki yang sama, selector memilih yang paling bawah/terakhir yang dipakai oleh CSS.
+
+## Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!
+-  Responsive Design membuat web menjadi lebih ramah untuk bermacam platform, mau itu handphone, tablet, maupun desktop. 
+Sehingga bukan user desktop saja yang bisa melihat web dengan design bagus  yang mengakibatkan UI/UX di platform lain menjadi lebih dinikmati.
+- Cth Web yang sudah menerapkan responsive design adalah https://scele.cs.ui.ac.id/, SCELE. Karena ketika disimulate, web tersebut responsif, dimana ukuran2 objeknya berubah untuk menyesuaikan layar hp. 
+- Cth Web yang belum menerapkan responsive design adalah https://www.tokopedia.com/, TokoPedia. Karena tidak ada perubahan ketika disimulasikan melalui hp, Tokopedia sepertinya sudah fokus pada dedicated appnya untuk platform mobile, jadi platform webnya ditinggalkan.
+
+## Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+- Margin = ruang tidak berwarna diluar border yang memisahkan objek dengan objek lain.
+- Border = "bingkai" elemen yang berada diantara padding dan margin.
+- Padding = ruang kosong antara konten dan border.
+- Implementasi di CSS:
+
+* {
+    margin : 67px; <- Margin
+    padding : 69px: <- Padding
+    border : 4x dashed black; <- Border
+}
+
+- ![MarginBorderPadding](https://pbp-fasilkom-ui.github.io/ganjil-2026/assets/images/t4-1-833b8ee0d0dd53959be9b66d452cd1d6.png)
+- source, Tutorial PBP Fasilkom UI
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+### Implementasikan fungsi untuk menghapus dan mengedit product.
+- untuk mengimplementasikan fungsi edit, pada views.py, tambahkan kode seperti ini:
+
+@login_required(login_url='/login')
+def edit_product(request, id):
+    prdk = get_object_or_404(Produk, pk=id)
+    form = ProductForm(request.POST or None, instance=prdk)
+    if form.is_valid() and request.method == 'POST':
+        form.save()
+        return redirect('main:show_main')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "edit_product.html", context)```
+
+- Fungsi ini mengambil produk yang sudah ada, lalu membuat dan mengisi form dengan produk yang diambil tadi. Sehingga user bisa mengedit produk yang sudah ada di database. 
+- Tambahkan edit_product.html yang menampung form tersebut. 
+- Lalu untuk fungsi delete, tambahkan kode seperti ini: 
+```
+@login_required(login_url='/login')
+def delete_product(request, id):
+    product = get_object_or_404(Product, pk=id)
+    product.delete()
+    return HttpResponseRedirect(reverse('main:show_main')
+```
+
+- Fungsi tersebut mengambil produk berdasarkan id, lalu mendeletenya dengan .delete().
+- tambahkan routing pada urls.py
+
+```
+    path('product/<uuid:id>/delete', delete_product, name='delete_product'),
+    path('product/<uuid:id>/edit', edit_product, name='edit_product'),
+```
 
 
+### customise desain pada template HTML yang telah dibuat pada tugas-tugas sebelumnya menggunakan CSS atau CSS framework (seperti Bootstrap, Tailwind, Bulma) dengan ketentuan sebagai berikut:
+#### customise halaman login, register, tambah product, edit product, dan detail product semenarik mungkin.
+- 
+
+#### customise halaman daftar product menjadi lebih menarik dan responsive. Kemudian, perhatikan kondisi berikut:
+##### Jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar.
+- Pada main.html, tambahkan seksi
+```
+{% if not news_list %}
+
+        ...
+        <div class="w-32 h-32 mx-auto mb-4">
+          <img src="{% static 'image/no-product.png' %}" alt="No product available" class="w-full h-full object-contain">
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">gak ada produk/h3>
+        <p class="text-gray-500 mb-6">produk masih kosong.</p>
+        ...
+
+{% else %}
+        ...
+{% endif %}
+```
+
+- Di bagian kode itu, jika tidak ada produk, maka page akan menampilkan image dan pesan kalau tidak ada produk yang terdaftar.
+
+#### Jika sudah ada product yang tersimpan, halaman daftar product akan menampilkan detail setiap product dengan menggunakan card (tidak boleh sama persis dengan desain pada Tutorial!).
+- Saya mengambil inspirasi dari tutorial, namun saya ganti sedikit agar fit kepada use-case saya
+
+#### Untuk setiap card product, buatlah dua buah button untuk mengedit dan menghapus product pada card tersebut!
+- Tambahkan ini pada file html:
+
+          <a href="{% url 'main:edit_product' product.id %}" class="text-gray-700 text-sm">Edit</a>
+          <a href="{% url 'main:delete_product' product.id %}" class="text-red-700 text-sm">Delete</a>
+
+- Bagian kode ini akan menampilkan text yang akan memangil fungsi edit dan delete pada views.py yang sudah ter-route dengan benar.
+
+
+#### Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
+- Tambahkan 2 bagian kode yang berbeda untuk mobile dan desktop.
+- Jadi untuk bagian desktop tambahkan bagian kode ini:
+
+        <div class="hidden md:flex items-center space-x-8">
+ 
+- jadi ketika layar "md" atau medium dan lebih besar, maka akan flex atau menunjukkan menunya, dan hidden secara default untuk lainnya
+- Lalu untuk bagian mobile tambahkan kode ini:
+
+        <div class="md:hidden flex items-center">
+
+- Yang dimana menu hamburger akan hide kalau screen adalah md atau lebih besar, dan show untuk layar yang lebih kecil daripada itu.
