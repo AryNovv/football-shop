@@ -8,8 +8,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -43,6 +45,30 @@ def create_listing(request):
     context = {'form': form}
     return render(request, "create_listing.html", context)
 
+@csrf_exempt
+@require_POST
+def add_listing_entry_ajax(request):
+    name = request.POST.get("name")
+    description = request.POST.get("description")
+    category = request.POST.get("category")
+    thumbnail = request.POST.get("thumbnail")
+    price = request.POST.get("price")
+    is_featured = request.POST.get("is_featured") == 'on'  # checkbox handling
+    user = request.user
+
+    new_produk = Produk(
+        name=name, 
+        description=description,
+        category=category,
+        thumbnail=thumbnail,
+        is_featured=is_featured,
+        price=price,
+        user=user
+    )
+    new_produk.save()
+
+    return HttpResponse(b"CREATED", status=201)
+
 @login_required(login_url='/login')
 def show_catalog(request, id):
     products = get_object_or_404(Produk, pk=id)
@@ -59,10 +85,29 @@ def show_xml(request):
     xml_data = serializers.serialize("xml", product_list)
     return HttpResponse(xml_data, content_type="application/xml")
 
+
+
 def show_json(request):
     product_list = Produk.objects.all()
-    json_data = serializers.serialize("json", product_list)
-    return HttpResponse(json_data, content_type="application/json")
+    data =[
+        {
+            'id': str(produk.id),
+            'price': produk.price,
+            'name': produk.name,
+            'description': produk.description,
+            'category': produk.category,
+            'thumbnail': produk.thumbnail,
+            'created_at': produk.created_at.isoformat() if Produk.created_at else None,
+            'products_views' : produk.products_views,
+            'is_featured': produk.is_featured,
+            'is_product_hot' : produk.is_product_hot,
+            'user_id': produk.user_id,
+
+        }
+        for produk in product_list
+
+    ]
+    return JsonResponse(data, safe=False)
 
 def show_xml_by_id(request, product_id):
     try:
@@ -74,11 +119,27 @@ def show_xml_by_id(request, product_id):
 
 def show_json_by_id(request, product_id):
     try:
-        product_item  = Produk.objects.get(pk=product_id)
-        json_data = serializers.serialize("json", [product_item])
-        return HttpResponse(json_data, content_type="application/json")
-    except:
-        return HttpResponse(status=404)
+        produk = Produk.objects.select_related('user').get(pk=product_id)
+        data = {
+            'id': str(produk.id),
+            'price': produk.price,
+            'name': produk.name,
+            'description': produk.description,
+            'category': produk.category,
+            'thumbnail': produk.thumbnail,
+            'created_at': produk.created_at.isoformat() if Produk.created_at else None,
+            'products_views' : produk.products_views,
+            'is_featured': produk.is_featured,
+            'is_product_hot' : produk.is_product_hot,
+            
+            'user_id': produk.user_id,
+            'user_username': produk.user.username if produk.user_id else None,
+
+        }
+
+        return JsonResponse(data)
+    except  Produk.DoesNotExist:
+        return JsonResponse({'detail': 'Not found'}, status=404)
     
 def register(request):
     form = UserCreationForm()
