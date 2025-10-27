@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -48,6 +49,11 @@ def create_listing(request):
 @csrf_exempt
 @require_POST
 def add_listing_entry_ajax(request):
+
+    title = strip_tags(request.POST.get("title")) # strip HTML tags!
+    content = strip_tags(request.POST.get("content")) # strip HTML tags!
+
+    
     name = request.POST.get("name")
     description = request.POST.get("description")
     category = request.POST.get("category")
@@ -97,7 +103,7 @@ def show_json(request):
             'description': produk.description,
             'category': produk.category,
             'thumbnail': produk.thumbnail,
-            'created_at': produk.created_at.isoformat() if Produk.created_at else None,
+            'created_at': produk.created_at.isoformat() if produk.created_at else None,
             'products_views' : produk.products_views,
             'is_featured': produk.is_featured,
             'is_product_hot' : produk.is_product_hot,

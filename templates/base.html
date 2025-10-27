@@ -5,7 +5,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% block meta %} {% endblock meta %}
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com">
+      tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        // Dark backgrounds
+        'dark': {
+          DEFAULT: '#0f0f0f',
+          50: '#f5f5f5',
+          100: '#e5e5e5',
+          200: '#2a2a2a',
+          300: '#252525',
+          400: '#1f1f1f',
+          500: '#1a1a1a',
+          600: '#151515',
+          700: '#101010',
+          800: '#0a0a0a',
+          900: '#050505',
+        },
+        // Gold accent colors
+        'gold': {
+          DEFAULT: '#d4af37',
+          50: '#fefbf3',
+          100: '#fdf7e7',
+          200: '#faecc3',
+          300: '#f7e19f',
+          400: '#f4d03f',
+          500: '#d4af37',
+          600: '#b8941f',
+          700: '#9a7b19',
+          800: '#7d6314',
+          900: '#604b10',
+        },
+      },
+    },
+  },
+}
+    </script>
+     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
   </head>
   <body>

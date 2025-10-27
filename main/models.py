@@ -8,7 +8,7 @@ class Produk(models.Model):
     
     CATEGORY_CHOICES = [
         ('boots', 'Boots'),
-        ('knee-guards', 'Knee-guards'),
+        ('knee_guards', 'Knee_guards'),
         ('footballs', 'Footballs'),
         ('socks', 'Socks'),
         ('shirts', 'Shirts'),
@@ -25,6 +25,7 @@ class Produk(models.Model):
     products_views = models.IntegerField(default=0)
     is_featured = models.BooleanField(default=False)
     is_product_hot = models.BooleanField(default=False)
+    
     
     
     def __str__(self):

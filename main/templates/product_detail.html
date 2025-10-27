@@ -39,7 +39,7 @@
             
             <!-- Header -->
             <div class="p-6 sm:p-8">
-                <div class="flex flex-wrap items-center gap-2 mb-4">
+                <div id="badges-container" class="flex flex-wrap items-center gap-2 mb-4">
                     <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-600 text-white">
                         {{ products.get_category_display }}
                     </span>
@@ -55,7 +55,7 @@
                     {% endif %}
                 </div>
                 
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
+                <h1 id="article-title" class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
                     {{ products.name }}
                 </h1>
                 
@@ -68,13 +68,12 @@
             </div>
 
             <!-- Featured Image -->
-            {% if products.thumbnail %}
-                <div class="px-6 sm:px-8">
-                    <img src="{{ products.thumbnail }}" 
-                         alt="{{ products.name}}" 
-                         class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
-                </div>
-            {% endif %}
+            <div id="featured-image-container" class="px-6 sm:px-8 {% if not products.thumbnail %}hidden{% endif %}">
+                <img id="featured-image" 
+                     src="{{ products.thumbnail }}" 
+                     alt="{{ products.name}}" 
+                     class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
+            </div>
 
             <!-- Content -->
             <div class="p-6 sm:p-8">
@@ -86,14 +85,14 @@
             </div>
 
             <!-- Author Info -->
-            <div id="article-author" class="border-t border-gray-200 p-6 sm:p-8 bg-gray-50">
+            <div class="border-t border-gray-200 p-6 sm:p-8 bg-gray-50">
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="font-medium text-gray-900">
+                        <div id="article-author" class="font-medium text-gray-900">
                             {% if products.user %}
-                                <p>Author: {{ products.user.username }}</p>
+                                Author: {{ products.user.username }}
                             {% else %}
-                                <p>Author: Anonymous</p>
+                                Author: Anonymous
                             {% endif %}
                         </div>
                         <p class="text-sm text-gray-500">Author</p>
@@ -133,21 +132,26 @@ function showState(state) {
 // Get readable category name
 function getCategoryLabel(categoryCode) {
     const categoryMapping = {
-        boots: 'boots',
-        knee_guards: 'knee_guards',
-        footballs: 'footballs',
-        socks: 'socks',
-        shirts: 'shirts',
-        gloves: 'gloves',
+        boots: 'Boots',
+        knee_guards: 'Knee Guards',
+        footballs: 'Footballs',
+        socks: 'Socks',
+        shirts: 'Shirts',
+        gloves: 'Gloves',
     };
     return categoryMapping[categoryCode] || categoryCode;
 }
 
 // Render article content
 function renderArticle(produk) {
+    // Sanitize user-generated content
+    const safeName = DOMPurify.sanitize(produk.name || 'Untitled');
+    const safeDescription = DOMPurify.sanitize(produk.description || 'No description available');
+    const safeThumbnail = DOMPurify.sanitize(produk.thumbnail || '');
+    
     // Set title
-    articleTitle.textContent = produk.title;
-    document.title = `${produk.name} - Football Shop`;
+    articleTitle.textContent = safeName;
+    document.title = `${safeName} - Football Shop`;
     
     // Set badges
     badgesContainer.innerHTML = '';
@@ -186,16 +190,16 @@ function renderArticle(produk) {
     articleViews.textContent = `${produk.products_views} views`;
     
     // Set featured image
-    if (produk.thumbnail) {
-        featuredImage.src = produk.thumbnail;
-        featuredImage.alt = produk.title;
+    if (safeThumbnail) {
+        featuredImage.src = safeThumbnail;
+        featuredImage.alt = safeName;
         featuredImageContainer.classList.remove('hidden');
     } else {
         featuredImageContainer.classList.add('hidden');
     }
     
     // Set content
-    articleContentText.textContent = produk.content;
+    articleContentText.textContent = safeDescription;
     
     // Set author
     const authorName = produk.user_username || 'Anonymous';
