@@ -1,5 +1,5 @@
 from django.urls import path
-from main.views import show_main, create_listing, show_catalog,show_xml,show_json,show_xml_by_id, show_json_by_id,register,login_user,logout_user,edit_listing,delete_Listing,add_listing_entry_ajax
+from main.views import show_main, create_listing, show_catalog,show_xml,show_json,show_xml_by_id, show_json_by_id,register,login_user,logout_user,edit_listing,delete_Listing,add_listing_entry_ajax,sort_listing_with_ajax
 
 app_name = 'main'
 
@@ -17,4 +17,6 @@ urlpatterns = [
     path('news/<uuid:id>/edit', edit_listing, name='edit_listing'),
     path('news/<uuid:id>/delete', delete_Listing, name='delete_Listing'),
     path('create-listing-ajax', add_listing_entry_ajax, name='add_listing_entry_ajax'),
+    path('sort-listing-ajax', sort_listing_with_ajax, name='sort_listing_with_ajax'),
+
 ]

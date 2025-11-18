@@ -198,3 +198,33 @@ def delete_Listing(request, id):
     prdk = get_object_or_404(Produk, pk=id)
     prdk.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
+
+def sort_listing_with_ajax (request):
+    sortOrder = request.GET.get('sort','asce')
+
+    if(sortOrder == 'desce'):
+        produk =Produk.object.All().order_by('-price')
+    else:
+        produk =Produk.object.All().order_by('price')
+
+    data = {
+            'id': str(produk.id),
+            'price': produk.price,
+            'name': produk.name,
+            'description': produk.description,
+            'category': produk.category,
+            'thumbnail': produk.thumbnail,
+            'created_at': produk.created_at.isoformat() if Produk.created_at else None,
+            'products_views' : produk.products_views,
+            'is_featured': produk.is_featured,
+            'is_product_hot' : produk.is_product_hot,
+            
+            'user_id': produk.user_id,
+            'user_username': produk.user.username if produk.user_id else None,
+
+        }
+    
+    return JsonResponse(data)
+
+
+    
