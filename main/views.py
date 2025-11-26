@@ -13,6 +13,9 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+from django.views.decorators.http import require_http_methods
+import json
+import requests
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -47,7 +50,16 @@ def create_listing(request):
     return render(request, "create_listing.html", context)
 
 @csrf_exempt
+@require_http_methods(["POST", "OPTIONS"])
 def create_product_flutter(request):
+    # Handle OPTIONS request (CORS preflight)
+    if request.method == 'OPTIONS':
+        response = JsonResponse({"status": "ok"})
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        response["Access-Control-Allow-Headers"] = "Content-Type"
+        return response
+    
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -63,6 +75,13 @@ def create_product_flutter(request):
             # Get the logged-in user
             user = request.user
             
+            # If user is not authenticated, return error
+            if not user.is_authenticated:
+                return JsonResponse({
+                    "status": "error", 
+                    "message": "User not authenticated"
+                }, status=401)
+            
             # Create new product
             new_product = Produk(
                 name=name,
@@ -76,10 +95,21 @@ def create_product_flutter(request):
             new_product.save()
             
             return JsonResponse({"status": "success"}, status=200)
+        except json.JSONDecodeError:
+            return JsonResponse({
+                "status": "error", 
+                "message": "Invalid JSON"
+            }, status=400)
         except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=400)
-    else:
-        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+            return JsonResponse({
+                "status": "error", 
+                "message": str(e)
+            }, status=400)
+    
+    return JsonResponse({
+        "status": "error", 
+        "message": "Invalid request method"
+    }, status=405)
     
 def proxy_image(request):
 
