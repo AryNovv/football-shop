@@ -148,31 +148,38 @@ def show_xml(request):
 
 
 def show_json(request):
-    """
-    Return all products as JSON
-    """
-    try:
-        product_list = Produk.objects.all()
-        data = []
+    product_list = Produk.objects.all()
+    data = []
+    
+    for produk in product_list:
+        # Handle thumbnail - check if it's None or empty
+        thumbnail_url = ''
+        if produk.thumbnail:
+            thumbnail_url = str(produk.thumbnail)
         
-        for produk in product_list:
-            data.append({
-                'id': str(produk.id),
-                'price': produk.price,
-                'name': produk.name,
-                'description': produk.description,
-                'category': produk.category,
-                'thumbnail': produk.thumbnail if produk.thumbnail else '',
-                'created_at': produk.created_at.isoformat() if produk.created_at else None,
-                'products_views': produk.products_views,
-                'is_featured': produk.is_featured,
-                'is_product_hot': produk.is_product_hot,
-                'user_id': produk.user_id,
-            })
+        # Handle created_at
+        created_at_str = None
+        if produk.created_at:
+            created_at_str = produk.created_at.isoformat()
         
-        return JsonResponse(data, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        # Check if product is hot (more than 20 views)
+        is_hot = produk.products_views > 20
+        
+        data.append({
+            'id': str(produk.id),
+            'price': produk.price,
+            'name': produk.name,
+            'description': produk.description,
+            'category': produk.category,
+            'thumbnail': thumbnail_url,
+            'created_at': created_at_str,
+            'products_views': produk.products_views,
+            'is_featured': produk.is_featured,
+            'is_product_hot': is_hot,
+            'user_id': produk.user_id if produk.user_id else None,
+        })
+    
+    return JsonResponse(data, safe=False)
 
 def show_xml_by_id(request, product_id):
     try:
