@@ -47,6 +47,60 @@ def create_listing(request):
     return render(request, "create_listing.html", context)
 
 @csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            
+            # Get data from request
+            name = strip_tags(data.get("name", ""))
+            description = strip_tags(data.get("description", ""))
+            price = int(data.get("price", 0))
+            category = data.get("category", "boots")
+            thumbnail = data.get("thumbnail", "")
+            is_featured = data.get("is_featured", False)
+            
+            # Get the logged-in user
+            user = request.user
+            
+            # Create new product
+            new_product = Produk(
+                name=name,
+                description=description,
+                price=price,
+                category=category,
+                thumbnail=thumbnail,
+                is_featured=is_featured,
+                user=user
+            )
+            new_product.save()
+            
+            return JsonResponse({"status": "success"}, status=200)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)
+    else:
+        return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+    
+def proxy_image(request):
+
+    image_url = request.GET.get('url')
+    if not image_url:
+        return HttpResponse('No URL provided', status=400)
+    
+    try:
+        # Fetch image from external source
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        
+        # Return the image with proper content type
+        return HttpResponse(
+            response.content,
+            content_type=response.headers.get('Content-Type', 'image/jpeg')
+        )
+    except requests.RequestException as e:
+        return HttpResponse(f'Error fetching image: {str(e)}', status=500)
+
+@csrf_exempt
 @require_POST
 def add_listing_entry_ajax(request):
 
