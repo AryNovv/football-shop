@@ -94,26 +94,31 @@ def show_xml(request):
 
 
 def show_json(request):
-    product_list = Produk.objects.all()
-    data =[
-        {
-            'id': str(produk.id),
-            'price': produk.price,
-            'name': produk.name,
-            'description': produk.description,
-            'category': produk.category,
-            'thumbnail': produk.thumbnail,
-            'created_at': produk.created_at.isoformat() if produk.created_at else None,
-            'products_views' : produk.products_views,
-            'is_featured': produk.is_featured,
-            'is_product_hot' : produk.is_product_hot,
-            'user_id': produk.user_id,
-
-        }
-        for produk in product_list
-
-    ]
-    return JsonResponse(data, safe=False)
+    """
+    Return all products as JSON
+    """
+    try:
+        product_list = Produk.objects.all()
+        data = []
+        
+        for produk in product_list:
+            data.append({
+                'id': str(produk.id),
+                'price': produk.price,
+                'name': produk.name,
+                'description': produk.description,
+                'category': produk.category,
+                'thumbnail': produk.thumbnail if produk.thumbnail else '',
+                'created_at': produk.created_at.isoformat() if produk.created_at else None,
+                'products_views': produk.products_views,
+                'is_featured': produk.is_featured,
+                'is_product_hot': produk.is_product_hot,
+                'user_id': produk.user_id,
+            })
+        
+        return JsonResponse(data, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 def show_xml_by_id(request, product_id):
     try:
